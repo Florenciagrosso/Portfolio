@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Florencia Grosso — Power BI Developer</title>
+<title>Lourdes Grosso — Power BI Developer</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -33,10 +33,12 @@
     font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   .container { max-width: 980px; margin: 0 auto; padding: 0 28px; }
 
+  /* NAV */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: rgba(13,27,42,0.85);
@@ -50,7 +52,11 @@
   .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color .2s; }
   .nav-links a:hover { color: var(--white); }
 
+  /* HERO */
   .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); }
+  .hero-inner { display: flex; gap: 52px; align-items: flex-start; }
+  .hero-text { flex: 1; }
+
   .hero-eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; font-weight: 500;
@@ -58,6 +64,7 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     margin-bottom: 20px;
+    opacity: 0; animation: fadeUp .6s .1s forwards;
   }
   .hero h1 {
     font-size: clamp(2.4rem, 5vw, 3.6rem);
@@ -65,12 +72,14 @@
     line-height: 1.08;
     letter-spacing: -0.02em;
     margin-bottom: 14px;
+    opacity: 0; animation: fadeUp .6s .2s forwards;
   }
   .hero-subtitle {
     font-size: 16px;
     color: var(--muted);
     font-weight: 400;
     margin-bottom: 28px;
+    opacity: 0; animation: fadeUp .6s .3s forwards;
   }
   .hero-tagline {
     font-size: 17px;
@@ -80,9 +89,67 @@
     padding-left: 18px;
     border-left: 2px solid var(--teal);
     margin-bottom: 40px;
+    opacity: 0; animation: fadeUp .6s .4s forwards;
+  }
+  .skills-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    opacity: 0; animation: fadeUp .6s .5s forwards;
   }
 
-  .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* PHOTO */
+  .hero-photo-wrap {
+    flex-shrink: 0;
+    opacity: 0; animation: fadeIn .8s .3s forwards;
+  }
+  .photo-ring {
+    position: relative;
+    width: 160px; height: 160px;
+  }
+  .photo-ring::before {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(var(--teal), #60A5FA, #A78BFA, var(--teal));
+    animation: spinRing 4s linear infinite;
+  }
+  .photo-ring::after {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .photo-ring img {
+    position: relative; z-index: 1;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes spinRing {
+    to { transform: rotate(360deg); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .skill-badge {
     padding: 5px 12px;
     background: var(--tag-bg);
@@ -148,7 +215,7 @@
   .edu-inst { font-size: 12px; color: var(--teal); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
   .edu-period { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-  /* PROJECTS */
+  /* PROJECTS GRID */
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -167,19 +234,65 @@
   }
   .card:hover { border-color: var(--border2); transform: translateY(-2px); }
 
-  .card-image {
+  /* GALLERY INSIDE CARD */
+  .card-gallery {
+    position: relative;
     width: 100%;
     aspect-ratio: 16/9;
     overflow: hidden;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
   }
-  .card-image img {
+  .gallery-track {
+    display: flex;
+    height: 100%;
+    transition: transform .4s cubic-bezier(.4,0,.2,1);
+  }
+  .gallery-track img {
+    flex-shrink: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform .4s ease;
   }
-  .card:hover .card-image img { transform: scale(1.03); }
+  .gallery-btn {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: rgba(13,27,42,0.75);
+    border: 1px solid var(--border2);
+    color: var(--white);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px;
+    opacity: 0; transition: opacity .2s;
+    z-index: 2;
+  }
+  .card-gallery:hover .gallery-btn { opacity: 1; }
+  .gallery-btn.prev { left: 10px; }
+  .gallery-btn.next { right: 10px; }
+  .gallery-dots {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px; z-index: 2;
+  }
+  .gdot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transition: background .2s, transform .2s;
+    cursor: pointer;
+  }
+  .gdot.active { background: var(--teal); transform: scale(1.3); }
+  .gallery-expand {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(13,27,42,0.75);
+    border: 1px solid var(--border2);
+    color: var(--white);
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px;
+    opacity: 0; transition: opacity .2s;
+    z-index: 2;
+  }
+  .card-gallery:hover .gallery-expand { opacity: 1; }
 
   .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
 
@@ -193,9 +306,9 @@
     border-radius: 3px;
     border: 1px solid;
   }
-  .industry-badge.consultoría  { color: #A78BFA; border-color: rgba(167,139,250,.3); background: rgba(167,139,250,.08); }
-  .industry-badge.salud        { color: #34D399; border-color: rgba(52,211,153,.3);  background: rgba(52,211,153,.08); }
-  .industry-badge.medios       { color: #F59E0B; border-color: rgba(245,158,11,.3);  background: rgba(245,158,11,.08); }
+  .industry-badge.consultoria { color: #A78BFA; border-color: rgba(167,139,250,.3); background: rgba(167,139,250,.08); }
+  .industry-badge.salud       { color: #34D399; border-color: rgba(52,211,153,.3);  background: rgba(52,211,153,.08); }
+  .industry-badge.medios      { color: #F59E0B; border-color: rgba(245,158,11,.3);  background: rgba(245,158,11,.08); }
 
   .card-scope { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
   .card-title { font-size: 17px; font-weight: 600; line-height: 1.25; }
@@ -240,6 +353,118 @@
     color: var(--muted);
   }
 
+  /* DEMOS VIDEO SECTION */
+  .demos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .demos-grid { grid-template-columns: 1fr; } }
+  .demo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color .25s, transform .25s;
+  }
+  .demo-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .demo-thumb {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: var(--surface2);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .demo-thumb iframe {
+    width: 100%; height: 100%;
+    border: none;
+    pointer-events: none;
+  }
+  .demo-play-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(13,27,42,0.45);
+    transition: background .2s;
+  }
+  .demo-card:hover .demo-play-overlay { background: rgba(13,27,42,0.2); }
+  .play-icon {
+    width: 44px; height: 44px;
+    background: var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: #0D1B2A;
+    transition: transform .2s;
+  }
+  .demo-card:hover .play-icon { transform: scale(1.1); }
+  .demo-info { padding: 14px 16px; }
+  .demo-title { font-size: 13px; font-weight: 600; }
+  .demo-sub { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-top: 3px; }
+  .demo-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 10px;
+    font-size: 11px; color: var(--teal); text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    transition: opacity .2s;
+  }
+  .demo-link:hover { opacity: .75; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(6,14,22,0.96);
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-img-wrap {
+    position: relative;
+    max-width: 90vw; max-height: 80vh;
+    display: flex; align-items: center;
+  }
+  .lightbox-img-wrap img {
+    max-width: 90vw; max-height: 80vh;
+    border-radius: 8px;
+    object-fit: contain;
+    display: block;
+  }
+  .lb-btn {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: rgba(13,27,42,0.8);
+    border: 1px solid var(--border2);
+    color: var(--white);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 20px;
+    transition: background .2s;
+  }
+  .lb-btn:hover { background: var(--surface2); }
+  .lb-btn.prev { left: -56px; }
+  .lb-btn.next { right: -56px; }
+  .lb-close {
+    position: fixed; top: 20px; right: 24px;
+    background: none; border: none;
+    color: var(--muted); font-size: 28px;
+    cursor: pointer; line-height: 1;
+    transition: color .2s;
+  }
+  .lb-close:hover { color: var(--white); }
+  .lb-counter {
+    font-size: 12px; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lb-dots { display: flex; gap: 6px; }
+  .lb-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    cursor: pointer; transition: background .2s;
+  }
+  .lb-dot.active { background: var(--teal); }
+
   /* CONTACT */
   .contact-block { display: flex; flex-direction: column; gap: 24px; max-width: 540px; }
   .contact-block h2 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
@@ -267,10 +492,13 @@
   .footer-name { font-size: 13px; font-weight: 600; }
   .footer-meta { font-size: 12px; color: var(--muted); }
 
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
+    .hero-inner { flex-direction: column-reverse; align-items: center; }
     .hero { padding: 52px 0 44px; }
     .nav-links { gap: 18px; }
     .section { padding: 44px 0; }
+    .lb-btn.prev { left: -40px; }
+    .lb-btn.next { right: -40px; }
   }
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
@@ -281,36 +509,47 @@
 
 <nav>
   <div class="container">
-    <span class="nav-name">Florencia Grosso</span>
+    <span class="nav-name">Lourdes Grosso</span>
     <div class="nav-links">
       <a href="#proyectos">Proyectos</a>
+      <a href="#demos">Demos</a>
       <a href="#experiencia">Experiencia</a>
       <a href="#contacto">Contacto</a>
     </div>
   </div>
 </nav>
 
+<!-- HERO -->
 <header class="hero">
   <div class="container">
-    <p class="hero-eyebrow">Portafolio — Power BI Developer</p>
-    <h1>Florencia Grosso</h1>
-    <p class="hero-subtitle">BI Developer · Consultoría de datos · Mendoza, Argentina</p>
-    <p class="hero-tagline">
-      Diseño modelos de datos y dashboards en Power BI que convierten datos operativos complejos en decisiones concretas — para clientes en salud, medios y consultoría.
-    </p>
-    <div class="skills-grid">
-      <span class="skill-badge primary">DAX</span>
-      <span class="skill-badge primary">Power Query / M</span>
-      <span class="skill-badge primary">Data Modeling</span>
-      <span class="skill-badge primary">Power BI Service</span>
-      <span class="skill-badge">Star Schema</span>
-      <span class="skill-badge">RLS</span>
-      <span class="skill-badge">Azure Data Sources</span>
-      <span class="skill-badge">Business Central</span>
-      <span class="skill-badge">MySQL</span>
-      <span class="skill-badge">OData / Dynamics 365</span>
-      <span class="skill-badge">Financial Reporting</span>
-      <span class="skill-badge">SQL Server</span>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow">Portafolio — Power BI Developer</p>
+        <h1>Lourdes Grosso</h1>
+        <p class="hero-subtitle">BI Developer · Consultoría de datos · Mendoza, Argentina</p>
+        <p class="hero-tagline">
+          Diseño modelos de datos y dashboards en Power BI que convierten datos operativos complejos en decisiones concretas — para clientes en salud, medios y consultoría. Me apasiona la tecnología y la inteligencia artificial como herramienta de trabajo.
+        </p>
+        <div class="skills-grid">
+          <span class="skill-badge primary">DAX</span>
+          <span class="skill-badge primary">Power Query / M</span>
+          <span class="skill-badge primary">Data Modeling</span>
+          <span class="skill-badge primary">Power BI Service</span>
+          <span class="skill-badge">Star Schema</span>
+          <span class="skill-badge">RLS</span>
+          <span class="skill-badge">Azure Data Sources</span>
+          <span class="skill-badge">Business Central</span>
+          <span class="skill-badge">MySQL</span>
+          <span class="skill-badge">OData / Dynamics 365</span>
+          <span class="skill-badge">Financial Reporting</span>
+          <span class="skill-badge">SQL Server</span>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <div class="photo-ring">
+          <img src="ee13c2e2-3357-411a-b264-44b2d348d6db.jpg" alt="Lourdes Grosso">
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -321,25 +560,39 @@
     <p class="section-eyebrow">Proyectos seleccionados</p>
     <div class="projects-grid">
 
-      <!-- CARD 1 -->
-      <div class="card">
-        <div class="card-image">
-          <img src="operations-report.png" alt="Operations Status Report — 4WaysTech">
+      <!-- CARD 1: 4WaysTech -->
+      <div class="card reveal">
+        <div class="card-gallery" data-images='["4waystech/Portada4ways.png","4waystech/4ways 1.png","4waystech/4ways 2.png","4waystech/4ways 3.png","4waystech/4ways 4.png","4waystech/4ways 5.png","4waystech/4ways 6.png"]'>
+          <div class="gallery-track">
+            <img src="4waystech/Portada4ways.png" alt="Operations Status Report">
+            <img src="4waystech/4ways 1.png" alt="Vista 1">
+            <img src="4waystech/4ways 2.png" alt="Vista 2">
+            <img src="4waystech/4ways 3.png" alt="Vista 3">
+            <img src="4waystech/4ways 4.png" alt="Vista 4">
+            <img src="4waystech/4ways 5.png" alt="Vista 5">
+            <img src="4waystech/4ways 6.png" alt="Vista 6">
+          </div>
+          <button class="gallery-btn prev">‹</button>
+          <button class="gallery-btn next">›</button>
+          <button class="gallery-expand" title="Ampliar">⤢</button>
+          <div class="gallery-dots">
+            <span class="gdot active"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span>
+          </div>
         </div>
         <div class="card-body">
           <div class="card-meta">
-            <span class="industry-badge consultoría">Consultoría</span>
-            <span class="card-scope">7 páginas · 60+ medidas</span>
+            <span class="industry-badge consultoria">Consultoría</span>
+            <span class="card-scope">5 pestañas · 60+ medidas</span>
           </div>
           <div>
             <h2 class="card-title">Operations Status Report</h2>
             <p class="card-client">4WaysTech · Uso interno</p>
           </div>
           <p class="card-desc">
-            Dashboard operativo que reemplaza reportes manuales en Excel. Centraliza sprints, timesheets, work items y recursos en un esquema estrella con calendario DAX. Incluye alertas automáticas de burnout y concentración de cliente.
+            Dashboard operativo que reemplaza reportes manuales en Excel. Centraliza sprints, timesheets, análisis por cliente, proyecto y recurso en un esquema estrella con calendario DAX. Incluye alertas automáticas de concentración de cliente y burnout de recursos.
           </p>
           <div class="impact">
-            <strong>Impacto:</strong> Eliminó ~6 horas semanales de consolidación manual de datos en Excel — el equipo pasa de reporte a decisión el mismo día.
+            <strong>Impacto:</strong> Eliminó ~6 horas semanales de consolidación manual — el equipo pasa de reporte a decisión el mismo día.
           </div>
           <div class="card-tags">
             <span class="card-tag">Power BI</span>
@@ -369,25 +622,34 @@
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div class="card">
-        <div class="card-image">
-          <img src="alivia-health.png" alt="Financial Reporting — Alivia Health">
+      <!-- CARD 2: Alivia Health -->
+      <div class="card reveal">
+        <div class="card-gallery" data-images='["Alivia/Portada Alivia.png","Alivia/Alivia.png"]'>
+          <div class="gallery-track">
+            <img src="Alivia/Portada Alivia.png" alt="Financial Reporting Alivia">
+            <img src="Alivia/Alivia.png" alt="Dashboard Alivia">
+          </div>
+          <button class="gallery-btn prev">‹</button>
+          <button class="gallery-btn next">›</button>
+          <button class="gallery-expand" title="Ampliar">⤢</button>
+          <div class="gallery-dots">
+            <span class="gdot active"></span><span class="gdot"></span>
+          </div>
         </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="industry-badge salud">Salud</span>
-            <span class="card-scope">Multi-subsidiaria</span>
+            <span class="card-scope">Multi-subsidiaria · Puerto Rico</span>
           </div>
           <div>
             <h2 class="card-title">Financial Reporting — Alivia Health</h2>
             <p class="card-client">Alivia Health · 5 entidades (AIS, APS, AHD, AHM, ASP)</p>
           </div>
           <p class="card-desc">
-            Reportes financieros de P&amp;L y balance sheet para 5 subsidiarias con estructuras GL heterogéneas. Manejo de signo para pasivos/patrimonio, medidas de varianza y BLANK handling consistente entre entidades.
+            Reportes financieros de P&amp;L y balance sheet para 5 subsidiarias con estructuras GL heterogéneas. Manejo de signo para pasivos/patrimonio, medidas de varianza YoY, EBITDA y Net Income con BLANK handling consistente entre entidades.
           </p>
           <div class="impact">
-            <strong>Impacto:</strong> Consolidación de 5 entidades con lógica GL distinta en un único modelo — eliminó el cierre mensual manual que antes tomaba días.
+            <strong>Impacto:</strong> Consolidación de 5 entidades con lógica GL distinta — eliminó el cierre mensual manual que antes tomaba días.
           </div>
           <div class="card-tags">
             <span class="card-tag">Business Central</span>
@@ -417,44 +679,67 @@
         </div>
       </div>
 
-      <!-- CARD 3 -->
-      <div class="card">
-        <div class="card-image">
-          <img src="bsuite-dashboard.png" alt="bSuite Sales Dashboard — Pearl Media">
+      <!-- CARD 3: Pearl Media -->
+      <div class="card reveal" style="grid-column: span 2;">
+        <div class="card-gallery" data-images='["Pearl/Group 10.png","Pearl/image 7.png","Pearl/image 8.png","Pearl/image 9.png","Pearl/image 10.png","Pearl/image 11.png","Pearl/image 12.png","Pearl/image 13.png","Pearl/image 14.png"]'>
+          <div class="gallery-track">
+            <img src="Pearl/Group 10.png" alt="Pearl Media Dashboard portada">
+            <img src="Pearl/image 7.png" alt="Executive Summary">
+            <img src="Pearl/image 8.png" alt="Monthly Performance">
+            <img src="Pearl/image 9.png" alt="Assets Summary">
+            <img src="Pearl/image 10.png" alt="Budget vs Actual">
+            <img src="Pearl/image 11.png" alt="YoY Growth">
+            <img src="Pearl/image 12.png" alt="Lease Schedule">
+            <img src="Pearl/image 13.png" alt="Expiry Watch">
+            <img src="Pearl/image 14.png" alt="Future Revenue">
+          </div>
+          <button class="gallery-btn prev">‹</button>
+          <button class="gallery-btn next">›</button>
+          <button class="gallery-expand" title="Ampliar">⤢</button>
+          <div class="gallery-dots">
+            <span class="gdot active"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span><span class="gdot"></span>
+          </div>
         </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="industry-badge medios">Medios OOH</span>
-            <span class="card-scope">v4 + v5</span>
+            <span class="card-scope">5 pestañas · NYC / Brooklyn · QA</span>
           </div>
           <div>
-            <h2 class="card-title">bSuite Sales Dashboard</h2>
-            <p class="card-client">Pearl Media · Bmedia (Puerto Rico)</p>
+            <h2 class="card-title">OOH Revenue & Lease Intelligence — Pearl Media</h2>
+            <p class="card-client">Pearl Media · Publicidad exterior premium · Nueva York</p>
           </div>
           <p class="card-desc">
-            Dashboards de ventas para dos empresas de medios exterior. Incluye métricas de pipeline ponderado, revenue forecasting, lógica BCF/rent con 3 tipos (Fixed, Rev Share, MAG), y flechas de tendencia YoY dinámicas en matriz.
+            Dashboard integral para una empresa de publicidad exterior (Out-Of-Home) premium que opera espacios estratégicos para marcas como Google, NYX y Clarins. Cubre desde la vista financiera mensual hasta la gestión de contratos y proyecciones a largo plazo.
+            <br><br>
+            Incluye 5 secciones analíticas: <strong>Executive Summary</strong> con ingresos vs año anterior (+126% YoY), <strong>Assets YoY</strong> con tendencia activo a activo (PM-NY115 con +455%), <strong>Budget vs Actual</strong> con alertas de desvío, <strong>Lease Schedule & Expiry Watch</strong> con alertas dinámicas de vencimiento y margen BCF, y <strong>Future Revenue</strong> con proyecciones de ingresos contratados 2026–2030.
+            <br><br>
+            <em style="font-size:11px; color:var(--muted);">Nota: los datos fueron modificados para proteger información confidencial. El proyecto fue desarrollado y validado en QA — es un proyecto real.</em>
           </p>
           <div class="impact">
-            <strong>Impacto:</strong> Dos versiones en paralelo para empresas distintas sobre la misma base de datos, sin duplicación de lógica DAX.
+            <strong>Impacto:</strong> Reemplazó el seguimiento manual de contratos y el forecasting en Excel — el equipo de Real Estate visualiza en segundos cuándo vencen sus activos y qué ingresos tiene asegurados hasta 2055.
           </div>
           <div class="card-tags">
-            <span class="card-tag">MySQL / bSuite</span>
             <span class="card-tag">Dynamics 365 CRM</span>
             <span class="card-tag">OData</span>
-            <span class="card-tag">ALLSELECTED</span>
+            <span class="card-tag">DAX financiero</span>
+            <span class="card-tag">Lease management</span>
+            <span class="card-tag">YoY / YTD</span>
+            <span class="card-tag">Budget vs Actual</span>
+            <span class="card-tag">Revenue forecast</span>
           </div>
           <div class="complexity">
             <p class="complexity-label">Profundidad técnica</p>
             <div class="complexity-bars">
-              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:70%"></div></div>
-              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:70%"></div></div>
-              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:70%"></div></div>
+              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:90%"></div></div>
+              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:90%"></div></div>
+              <div class="cbar dim-modelado"><div class="cbar-fill" style="width:90%"></div></div>
               <div class="cbar dim-dax"><div class="cbar-fill" style="width:100%"></div></div>
               <div class="cbar dim-dax"><div class="cbar-fill" style="width:100%"></div></div>
               <div class="cbar dim-dax"><div class="cbar-fill" style="width:100%"></div></div>
-              <div class="cbar dim-visual"><div class="cbar-fill" style="width:90%"></div></div>
-              <div class="cbar dim-visual"><div class="cbar-fill" style="width:90%"></div></div>
-              <div class="cbar dim-visual"><div class="cbar-fill" style="width:90%"></div></div>
+              <div class="cbar dim-visual"><div class="cbar-fill" style="width:85%"></div></div>
+              <div class="cbar dim-visual"><div class="cbar-fill" style="width:85%"></div></div>
+              <div class="cbar dim-visual"><div class="cbar-fill" style="width:85%"></div></div>
             </div>
             <div class="complexity-dims">
               <span class="complexity-dim-label" style="color:#60A5FA">Modelado</span>
@@ -469,28 +754,80 @@
   </div>
 </section>
 
+<!-- DEMOS -->
+<section class="section" id="demos">
+  <div class="container">
+    <p class="section-eyebrow">Demos · proyectos propios</p>
+    <div class="demos-grid">
+
+      <div class="demo-card reveal">
+        <div class="demo-thumb">
+          <iframe src="https://www.youtube.com/embed/PwPI-zL9zNQ?start=13" title="Dashboard de Oportunidades" allowfullscreen loading="lazy"></iframe>
+          <div class="demo-play-overlay">
+            <div class="play-icon">▶</div>
+          </div>
+        </div>
+        <div class="demo-info">
+          <p class="demo-title">Dashboard de Oportunidades</p>
+          <p class="demo-sub">CRM · Pipeline · Power BI</p>
+          <a class="demo-link" href="https://www.youtube.com/watch?v=PwPI-zL9zNQ&t=13s" target="_blank">Ver en YouTube →</a>
+        </div>
+      </div>
+
+      <div class="demo-card reveal">
+        <div class="demo-thumb">
+          <iframe src="https://www.youtube.com/embed/hQmv1ZJK6uk" title="Dashboard Field Service" allowfullscreen loading="lazy"></iframe>
+          <div class="demo-play-overlay">
+            <div class="play-icon">▶</div>
+          </div>
+        </div>
+        <div class="demo-info">
+          <p class="demo-title">Dashboard Field Service</p>
+          <p class="demo-sub">Operaciones · KPIs · Power BI</p>
+          <a class="demo-link" href="https://www.youtube.com/watch?v=hQmv1ZJK6uk" target="_blank">Ver en YouTube →</a>
+        </div>
+      </div>
+
+      <div class="demo-card reveal">
+        <div class="demo-thumb">
+          <iframe src="https://www.youtube.com/embed/3YLu68gFKok" title="Reporte de Ventas" allowfullscreen loading="lazy"></iframe>
+          <div class="demo-play-overlay">
+            <div class="play-icon">▶</div>
+          </div>
+        </div>
+        <div class="demo-info">
+          <p class="demo-title">Reporte de Ventas</p>
+          <p class="demo-sub">Ventas · Tendencias · Power BI</p>
+          <a class="demo-link" href="https://www.youtube.com/watch?v=3YLu68gFKok" target="_blank">Ver en YouTube →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- EXPERIENCE -->
 <section class="section" id="experiencia">
   <div class="container">
     <p class="section-eyebrow">Experiencia</p>
     <div class="exp-list">
 
-      <div class="exp-item">
+      <div class="exp-item reveal">
         <div class="exp-dot"></div>
         <div class="exp-body">
-          <p class="exp-role">PBI Analyst</p>
+          <p class="exp-role">Analista de Datos BI</p>
           <p class="exp-company">4WaysTech</p>
           <p class="exp-period">Marzo 2025 — Junio 2026 · Las Heras, Mendoza</p>
-          <p class="exp-desc">Desarrollo de modelos de datos y dashboards operativos en Power BI para clientes en consultoría, salud y medios. Trabajo con fuentes heterogéneas (Azure DevOps, Business Central, MySQL, OData) y arquitectura de esquema estrella.</p>
+          <p class="exp-desc">Desarrollo de modelos de datos y dashboards operativos en Power BI para clientes en consultoría, salud y medios de Puerto Rico, República Dominicana y Estados Unidos. Trabajo con fuentes heterogéneas (Azure DevOps, Business Central, MySQL, OData) y arquitectura de esquema estrella. Rodeada de un equipo de ingenieros que impulsó mi crecimiento técnico constante.</p>
         </div>
       </div>
 
-      <div class="exp-item">
+      <div class="exp-item reveal">
         <div class="exp-dot"></div>
         <div class="exp-body">
-          <p class="exp-role">Analista de datos</p>
+          <p class="exp-role">Analista de Datos</p>
           <p class="exp-company">Zanella</p>
-          <p class="exp-period">Julio 2024 — Noviembre 2024 · Mendoza</p>
+          <p class="exp-period">Julio 2024 — Noviembre 2024 · Mendoza · Freelance</p>
           <p class="exp-desc">Diseño y desarrollo de base de datos en SQL Server para datos de producción. Creación de dashboard en Power BI con KPIs clave para toma de decisiones operativas.</p>
           <span class="exp-highlight">+15% de eficiencia productiva gracias al dashboard implementado</span>
         </div>
@@ -505,15 +842,20 @@
   <div class="container">
     <p class="section-eyebrow">Formación</p>
     <div class="edu-list">
-      <div class="edu-item">
+      <div class="edu-item reveal">
         <p class="edu-title">Licenciatura en Ciencia de Datos</p>
         <p class="edu-inst">Teclab Instituto Técnico Superior</p>
         <p class="edu-period">Enero 2026 — en curso</p>
       </div>
-      <div class="edu-item">
+      <div class="edu-item reveal">
+        <p class="edu-title">Certificación PL-300 (Power BI Data Analyst)</p>
+        <p class="edu-inst">Microsoft</p>
+        <p class="edu-period">En preparación activa</p>
+      </div>
+      <div class="edu-item reveal">
         <p class="edu-title">Data Analytics</p>
-        <p class="edu-inst">Henry Bootcamp</p>
-        <p class="edu-period">Marzo 2024 — Diciembre 2024</p>
+        <p class="edu-inst">Soy Henry Bootcamp</p>
+        <p class="edu-period">Febrero 2024 — Enero 2025</p>
       </div>
     </div>
   </div>
@@ -523,9 +865,9 @@
 <section class="section" id="contacto">
   <div class="container">
     <p class="section-eyebrow">Contacto</p>
-    <div class="contact-block">
+    <div class="contact-block reveal">
       <h2>Disponible para proyectos remotos</h2>
-      <p>Trabajo con clientes en LATAM, el Caribe y España. Si necesitás un modelo de datos robusto o un dashboard que reemplace reportes manuales, hablemos.</p>
+      <p>Trabajo con clientes en LATAM, el Caribe y España. Si necesitás un modelo de datos robusto o un dashboard que reemplace reportes manuales, hablemos. Disponibilidad full time.</p>
       <div class="contact-links">
         <a href="mailto:florenciagrossoda@gmail.com" class="cta-btn primary">Escribime</a>
         <a href="https://www.linkedin.com/in/florencialourdes-grosso" target="_blank" class="cta-btn secondary">LinkedIn →</a>
@@ -540,10 +882,115 @@
 
 <footer>
   <div class="container">
-    <span class="footer-name">Florencia Grosso</span>
+    <span class="footer-name">Lourdes Grosso</span>
     <span class="footer-meta">Power BI Developer · 2025</span>
   </div>
 </footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">×</button>
+  <div class="lightbox-img-wrap">
+    <button class="lb-btn prev" id="lbPrev">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-btn next" id="lbNext">›</button>
+  </div>
+  <span class="lb-counter" id="lbCounter"></span>
+  <div class="lb-dots" id="lbDots"></div>
+</div>
+
+<script>
+// ── Gallery component ──────────────────────────────────────────────────────
+function initGallery(galleryEl) {
+  const track  = galleryEl.querySelector('.gallery-track');
+  const imgs   = galleryEl.querySelectorAll('.gallery-track img');
+  const dots   = galleryEl.querySelectorAll('.gdot');
+  const prevBtn= galleryEl.querySelector('.gallery-btn.prev');
+  const nextBtn= galleryEl.querySelector('.gallery-btn.next');
+  const expand = galleryEl.querySelector('.gallery-expand');
+  const images = JSON.parse(galleryEl.dataset.images);
+  let cur = 0;
+
+  function goTo(i) {
+    cur = (i + imgs.length) % imgs.length;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === cur));
+  }
+
+  prevBtn.addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+  nextBtn.addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+
+  expand.addEventListener('click', e => {
+    e.stopPropagation();
+    openLightbox(images, cur);
+  });
+
+  galleryEl.addEventListener('click', () => openLightbox(images, cur));
+}
+
+document.querySelectorAll('.card-gallery').forEach(initGallery);
+
+// ── Lightbox ───────────────────────────────────────────────────────────────
+const lb       = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lbImg');
+const lbCounter= document.getElementById('lbCounter');
+const lbDots   = document.getElementById('lbDots');
+let lbImages = [], lbCur = 0;
+
+function openLightbox(images, startIdx) {
+  lbImages = images;
+  lbCur = startIdx;
+  lb.classList.add('open');
+  renderLb();
+  document.body.style.overflow = 'hidden';
+}
+
+function renderLb() {
+  lbImg.src = lbImages[lbCur];
+  lbCounter.textContent = `${lbCur + 1} / ${lbImages.length}`;
+  lbDots.innerHTML = lbImages.map((_, i) =>
+    `<span class="lb-dot${i === lbCur ? ' active' : ''}" data-i="${i}"></span>`
+  ).join('');
+  lbDots.querySelectorAll('.lb-dot').forEach(d =>
+    d.addEventListener('click', () => { lbCur = +d.dataset.i; renderLb(); })
+  );
+}
+
+document.getElementById('lbClose').addEventListener('click', closeLb);
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+document.getElementById('lbPrev').addEventListener('click', () => { lbCur = (lbCur - 1 + lbImages.length) % lbImages.length; renderLb(); });
+document.getElementById('lbNext').addEventListener('click', () => { lbCur = (lbCur + 1) % lbImages.length; renderLb(); });
+
+function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft')  { lbCur = (lbCur - 1 + lbImages.length) % lbImages.length; renderLb(); }
+  if (e.key === 'ArrowRight') { lbCur = (lbCur + 1) % lbImages.length; renderLb(); }
+});
+
+// ── Demo cards: click overlay to enable iframe ─────────────────────────────
+document.querySelectorAll('.demo-thumb').forEach(thumb => {
+  const overlay = thumb.querySelector('.demo-play-overlay');
+  overlay.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    const iframe = thumb.querySelector('iframe');
+    const src = iframe.src;
+    if (!src.includes('autoplay')) {
+      iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+    }
+    iframe.style.pointerEvents = 'auto';
+  });
+});
+
+// ── Scroll reveal ──────────────────────────────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
 
 </body>
 </html>
