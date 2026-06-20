@@ -104,22 +104,12 @@
   .photo-ring {
     position: relative;
     width: 160px; height: 160px;
-  }
-  .photo-ring::before {
-    content: '';
-    position: absolute; inset: -4px;
     border-radius: 50%;
-    background: conic-gradient(var(--teal), #60A5FA, #A78BFA, var(--teal));
-    animation: spinRing 4s linear infinite;
-  }
-  .photo-ring::after {
-    content: '';
-    position: absolute; inset: -1px;
-    border-radius: 50%;
-    background: var(--bg);
+    overflow: hidden;
+    border: 2px solid var(--teal-mid);
+    box-shadow: 0 0 0 4px rgba(45,212,191,0.08);
   }
   .photo-ring img {
-    position: relative; z-index: 1;
     width: 100%; height: 100%;
     border-radius: 50%;
     object-fit: cover;
@@ -134,9 +124,6 @@
   @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }
-  }
-  @keyframes spinRing {
-    to { transform: rotate(360deg); }
   }
 
   /* SCROLL REVEAL */
@@ -548,7 +535,7 @@
       </div>
       <div class="hero-photo-wrap">
         <div class="photo-ring">
-          <img src="Perfil/Perfil.jpg" alt="Lourdes Grosso" onerror="this.parentElement.parentElement.style.display='none'">
+          <img src="Perfil/Perfil.jpg" alt="Lourdes Grosso">
         </div>
       </div>
     </div>
